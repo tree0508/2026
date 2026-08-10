@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>대구 현장교육 수요조사1</title>
+<title>대구 현장교육 수요조사</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Noto+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
@@ -686,12 +686,37 @@ const statusEl = document.getElementById('status');
 const countPill = document.getElementById('count-pill');
 const submitBtn = document.getElementById('submit-btn');
 
+function jsonpRequest(params){
+  return new Promise((resolve, reject)=>{
+    if(!APPS_SCRIPT_URL){ reject(new Error('APPS_SCRIPT_URL이 설정되지 않았습니다.')); return; }
+    const cbName = 'jsonp_cb_' + Date.now() + '_' + Math.floor(Math.random()*1e6);
+    const script = document.createElement('script');
+    const timer = setTimeout(()=>{
+      cleanup();
+      reject(new Error('요청 시간이 초과되었습니다. 네트워크 상태를 확인해 주세요.'));
+    }, 15000);
+
+    function cleanup(){
+      delete window[cbName];
+      script.remove();
+      clearTimeout(timer);
+    }
+
+    window[cbName] = (data)=>{
+      cleanup();
+      resolve(data);
+    };
+
+    const qs = new URLSearchParams(Object.assign({}, params, { callback: cbName })).toString();
+    script.src = APPS_SCRIPT_URL + '?' + qs;
+    script.onerror = ()=>{ cleanup(); reject(new Error('스크립트를 불러오지 못했습니다. URL을 확인해 주세요.')); };
+    document.body.appendChild(script);
+  });
+}
+
 async function fetchRows(){
-  if(!APPS_SCRIPT_URL){ throw new Error('APPS_SCRIPT_URL이 설정되지 않았습니다.'); }
-  const res = await fetch(APPS_SCRIPT_URL, { method: 'GET' });
-  if(!res.ok) throw new Error('서버 응답 오류 (' + res.status + ')');
-  const data = await res.json();
-  return data.rows || [];
+  const data = await jsonpRequest({});
+  return (data && data.rows) || [];
 }
 
 async function refreshCount(){
@@ -720,15 +745,6 @@ submitBtn.addEventListener('click', async ()=>{
 
   const chosenTitles = Array.from(selected).map(i => COURSES[i].title);
 
-  const response = {
-    name: name || '(미입력)',
-    team: team || '(미입력)',
-    chosenCourses: chosenTitles,
-    extraCourse: extraTitle || null,
-    extraReason: extraReason || null,
-    submittedAt: new Date().toISOString()
-  };
-
   if(!APPS_SCRIPT_URL){
     statusEl.textContent = '아직 저장소가 연결되지 않았습니다. 파일 상단의 APPS_SCRIPT_URL 설정을 먼저 완료해 주세요.';
     statusEl.classList.add('err');
@@ -740,14 +756,16 @@ submitBtn.addEventListener('click', async ()=>{
   statusEl.textContent = '제출 중...';
 
   try{
-    // 프리플라이트(OPTIONS) 요청을 피하기 위해 text/plain으로 전송하고,
-    // 서버(Apps Script)에서 JSON.parse로 그대로 파싱합니다.
-    const res = await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify(response)
+    const data = await jsonpRequest({
+      action: 'submit',
+      name: name || '(미입력)',
+      team: team || '(미입력)',
+      courses: chosenTitles.join(' | '),
+      extraTitle: extraTitle || '',
+      extraReason: extraReason || ''
     });
-    if(!res.ok){
-      throw new Error('서버 응답 오류 (' + res.status + ')');
+    if(!data || !data.ok){
+      throw new Error('서버에서 저장을 확인하지 못했습니다.');
     }
     document.getElementById('form-view').classList.add('hidden');
     document.getElementById('thanks-view').classList.remove('hidden');
