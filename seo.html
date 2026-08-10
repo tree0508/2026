@@ -656,7 +656,7 @@ COURSES.forEach((c, i) => {
     <p class="effect">${c.effect}</p>
     ${c.note ? `<div class="note">${c.note}</div>` : ''}
     <div class="course-footer">
-      <span class="capacity">${c.cap ? `모집 참고 인원 <b>${c.cap}명</b>` : '모집 인원 미정 · 수요조사 반영'}</span>
+
       <div class="toggle" data-i="${i}">
         <span class="checkbox">${checkSvg}</span>
         <span class="toggle-label">참여 희망합니다</span>
@@ -912,6 +912,8 @@ document.getElementById('admin-close-btn').addEventListener('click', ()=>{
 });
 document.getElementById('admin-refresh-btn').addEventListener('click', loadAdminData);
 </script>
-
+  <p style="text-align: center; margin: 0; letter-spacing: 1px;">
+    &copy; 2026 AIES. All rights reserved.
+  </p>
 </body>
 </html>
