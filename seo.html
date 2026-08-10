@@ -427,7 +427,7 @@
       </div>
       <div class="field">
         <label for="r-team">소속 / 팀</label>
-        <input id="r-team" type="text" placeholder="예) 교육사업부 교육DX팀">
+        <input id="r-team" type="text" placeholder="예) 교육사업부 대구현장">
       </div>
     </div>
   </div>
@@ -609,7 +609,15 @@ const COURSES = [
   }
 ];
 
+/* ====== 배포 설정 ======
+   아래 APPS_SCRIPT_URL에 Google Apps Script 웹 앱 배포 후 받은 URL을 넣어주세요.
+   예: const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycb.../exec";
+   설정하지 않으면 제출 시 안내 메시지가 표시됩니다.
+*/
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwd7XvzAzA4b07wxBEpXzwa5i_NbGHNZN_E6_kKg437fIwrfjT1SCCVmYOTUh3sRD0eIg/exec";
+
 const checkSvg = '<svg viewBox="0 0 24 24" fill="none"><path d="M4 12L10 18L20 6" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
 
 const coursesEl = document.getElementById('courses');
 const selected = new Set();
@@ -678,12 +686,21 @@ const statusEl = document.getElementById('status');
 const countPill = document.getElementById('count-pill');
 const submitBtn = document.getElementById('submit-btn');
 
+async function fetchRows(){
+  if(!APPS_SCRIPT_URL){ throw new Error('APPS_SCRIPT_URL이 설정되지 않았습니다.'); }
+  const res = await fetch(APPS_SCRIPT_URL, { method: 'GET' });
+  if(!res.ok) throw new Error('서버 응답 오류 (' + res.status + ')');
+  const data = await res.json();
+  return data.rows || [];
+}
+
 async function refreshCount(){
+  if(!APPS_SCRIPT_URL){ countPill.textContent = ''; return; }
   try{
-    const res = await window.storage.list('response:', true);
-    const n = res && res.keys ? res.keys.length : 0;
-    countPill.textContent = `현재까지 ${n}명 참여`;
+    const rows = await fetchRows();
+    countPill.textContent = `현재까지 ${rows.length}명 참여`;
   }catch(err){
+    console.error('참여 인원 조회 오류:', err);
     countPill.textContent = '';
   }
 }
@@ -712,22 +729,32 @@ submitBtn.addEventListener('click', async ()=>{
     submittedAt: new Date().toISOString()
   };
 
-  const key = 'response:' + Date.now() + '-' + Math.random().toString(36).slice(2,8);
+  if(!APPS_SCRIPT_URL){
+    statusEl.textContent = '아직 저장소가 연결되지 않았습니다. 파일 상단의 APPS_SCRIPT_URL 설정을 먼저 완료해 주세요.';
+    statusEl.classList.add('err');
+    return;
+  }
 
   submitBtn.disabled = true;
   statusEl.classList.remove('err');
   statusEl.textContent = '제출 중...';
 
   try{
-    const result = await window.storage.set(key, JSON.stringify(response), true);
-    if(!result){
-      throw new Error('저장 실패');
+    // 프리플라이트(OPTIONS) 요청을 피하기 위해 text/plain으로 전송하고,
+    // 서버(Apps Script)에서 JSON.parse로 그대로 파싱합니다.
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(response)
+    });
+    if(!res.ok){
+      throw new Error('서버 응답 오류 (' + res.status + ')');
     }
     document.getElementById('form-view').classList.add('hidden');
     document.getElementById('thanks-view').classList.remove('hidden');
     refreshCount();
   }catch(err){
-    statusEl.textContent = '제출 중 오류가 발생했습니다. 다시 시도해 주세요.';
+    console.error('제출 오류:', err);
+    statusEl.textContent = '제출 중 오류가 발생했습니다: ' + (err && err.message ? err.message : String(err));
     statusEl.classList.add('err');
     submitBtn.disabled = false;
   }
@@ -778,31 +805,26 @@ async function loadAdminData(){
   extraListEl.innerHTML = '';
   adminStatsEl.innerHTML = '<div class="empty-note" style="grid-column:1/-1;">불러오는 중...</div>';
 
-  let keys = [];
-  try{
-    const listRes = await window.storage.list('response:', true);
-    keys = (listRes && listRes.keys) ? listRes.keys : [];
-  }catch(err){
-    adminStatsEl.innerHTML = '<div class="empty-note" style="grid-column:1/-1;">응답을 불러오지 못했습니다.</div>';
+  if(!APPS_SCRIPT_URL){
+    adminStatsEl.innerHTML = '<div class="empty-note" style="grid-column:1/-1;">저장소가 아직 연결되지 않았습니다. 파일 상단의 APPS_SCRIPT_URL 설정을 먼저 완료해 주세요.</div>';
     return;
   }
 
-  if(keys.length === 0){
+  let responses = [];
+  try{
+    responses = await fetchRows();
+  }catch(err){
+    console.error('응답 조회 오류:', err);
+    adminStatsEl.innerHTML = '<div class="empty-note" style="grid-column:1/-1;">응답을 불러오지 못했습니다: ' + esc(err.message || String(err)) + '</div>';
+    return;
+  }
+
+  if(responses.length === 0){
     adminStatsEl.innerHTML = '<div class="empty-note" style="grid-column:1/-1;">아직 제출된 응답이 없습니다.</div>';
     rankListEl.innerHTML = '<div class="empty-note">응답이 쌓이면 과정별 희망 인원이 여기 표시됩니다.</div>';
     extraListEl.innerHTML = '<div class="empty-note">아직 추가 요청이 없습니다.</div>';
     respTbody.innerHTML = '';
     return;
-  }
-
-  const responses = [];
-  for(const k of keys){
-    try{
-      const item = await window.storage.get(k, true);
-      if(item && item.value){
-        responses.push(JSON.parse(item.value));
-      }
-    }catch(err){ /* skip unreadable entries */ }
   }
 
   responses.sort((a,b)=> new Date(b.submittedAt) - new Date(a.submittedAt));
