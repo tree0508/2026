@@ -176,6 +176,16 @@
     font-size:16px; font-weight:600; color:var(--ink);
   }
 
+  /* 프로젝트 첫 화면 미리보기 (우측 상단) */
+  .proj-head{ display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:28px; align-items:start; }
+  .proj.has-shot .num{ position:static; font-size:40px; line-height:1; margin-bottom:10px; }
+  .proj.has-shot h3{ max-width:none; margin-bottom:0; }
+  .proj .shot{ display:block; aspect-ratio:16/10; border-radius:12px; overflow:hidden; border:1px solid var(--line);
+    background:var(--brand-tint); box-shadow:var(--card-shadow-sm, 0 4px 14px rgba(20,40,90,.08)); transition:transform .2s ease, box-shadow .2s ease; }
+  .proj .shot img{ width:100%; height:100%; object-fit:cover; object-position:top left; display:block; }
+  .proj a.shot:hover{ transform:translateY(-2px); box-shadow:0 10px 26px rgba(20,40,90,.16); }
+  @media (max-width:860px){ .proj-head{ grid-template-columns:1fr; } .proj .shot{ max-width:520px; } }
+
   /* closing */
   .closing{ padding:130px 0 60px 56px; }
   @media (max-width:680px){ .closing{ padding-left:44px; } }
@@ -233,12 +243,13 @@
     </div>
 
     <div class="reveal" style="margin-top:8px;">
-      <p class="part-desc" style="margin-bottom:20px;">현재 개발 중인 프로그램은 4가지입니다.</p>
+      <p class="part-desc" style="margin-bottom:20px;">현재 개발 중인 프로그램은 5가지입니다.</p>
       <div class="card-grid">
         <div class="card"><h3>AI 회의록</h3><p>회의 내용을 녹음하면 자동으로 요약·정리</p></div>
-        <div class="card"><h3>AI 정기보고 자동 생성</h3><p>주간·월간 보고서를 데이터 입력만으로 취합</p></div>
+        <div class="card"><h3>주간업무보고 자동 생성</h3><p>캘린더에 업무만 입력하면 주간보고서를 취합·생성</p></div>
+        <div class="card"><h3>인프라 근무상황판</h3><p>출장·휴가·외근 신청과 PM 승인, 잔여 연차를 한 화면에서 관리</p></div>
         <div class="card"><h3>AI 장애분석 보고</h3><p>장애 이력을 분석해 보고서 초안 생성</p></div>
-        <div class="card"><h3>SI 개발 지원 도우미</h3><p>폐쇄망 환경에서 코드·쿼리 검증 지원</p></div>
+        <div class="card" style="grid-column:1/-1;"><h3>SI 개발 지원 도우미</h3><p>폐쇄망 환경에서 코드·쿼리 검증 지원</p></div>
       </div>
     </div>
   </div>
@@ -302,12 +313,13 @@
   <div class="wrap" style="padding-left:0;">
     <div class="part-label mono">PART 03</div>
     <h2 class="part-title reveal">AIES 학습조직 개발중인 프로젝트</h2>
-    <p class="part-desc reveal">현재 4가지 프로그램을 실제로 개발하고 있습니다. 아래에서 각 프로젝트를 자세히 살펴볼 수 있습니다.</p>
+    <p class="part-desc reveal">현재 5가지 프로그램을 실제로 개발하고 있습니다. 아래에서 각 프로젝트를 자세히 살펴볼 수 있습니다.</p>
 
-    <div class="proj reveal">
-      <div class="num mono">01</div>
-      <div class="k mono">AI MEETING NOTES</div>
-      <h3>AI로 회의 내용을 요약해주는 AI 회의록</h3>
+    <div class="proj has-shot reveal">
+      <div class="proj-head">
+        <div class="proj-title"><div class="num mono">01</div><div class="k mono">AI MEETING NOTES</div><h3>AI로 회의 내용을 요약해주는 AI 회의록</h3></div>
+        <div class="shot"><img src="img/shot-meeting.jpg" alt="AI 회의록 실행 화면" loading="lazy"></div>
+      </div>
       <div class="proj-grid">
         <div class="proj-col"><div class="h">도입 배경</div><p>정기보고 회의를 수기나 노트북으로 기록하다 보니 놓치는 내용이 많고, 회의 자체에 집중하기 어려웠습니다.</p></div>
         <div class="proj-col"><div class="h">동작 구조</div><ul><li>스마트폰으로 녹음 시작</li><li>Web Speech API(STT)가 텍스트로 변환</li><li>Gemini 2.5가 회의록 자동 생성</li></ul></div>
@@ -315,8 +327,36 @@
       </div>
     </div>
 
+    <div class="proj has-shot reveal">
+      <div class="proj-head">
+        <div class="proj-title"><div class="num mono">02</div><div class="k mono">AUTO REPORTING</div><h3>정기 보고 자동 생성 — 나이스 인프라 주간업무보고 시스템</h3></div>
+        <a class="shot" href="https://neisreport.pythonanywhere.com/" target="_blank" rel="noopener" title="샘플 페이지 열기"><img src="img/shot-weekly.jpg" alt="주간업무보고 시스템 첫 화면" loading="lazy"></a>
+      </div>
+      <div class="proj-grid">
+        <div class="proj-col"><div class="h">도입 배경</div><p>주간·월간 보고는 템플릿에 기간별 데이터만 바뀌는 구조라, 자동화 여지가 큽니다.</p></div>
+        <div class="proj-col"><div class="h">주요 기능</div><ul><li>사업/품질관리 · 주요추진내역 · 장애대응 · 기술지원으로 나눠 캘린더에 업무 입력</li><li>기준 주를 고르면 주간보고서를 자동으로 취합·생성</li><li>한글(HWPX) 양식 보고서 출력, 장애이력 유지관리(i-Portal) 데이터 연동</li></ul></div>
+        <div class="proj-col"><div class="h">적용 현황</div><p>나이스 인프라 유지관리 사업에 적용해, 매주 반복되던 주간업무보고서 작성을 자동화하고 있습니다. 폐쇄망 서버에 설치해 쓸 수 있도록 배포합니다.</p></div>
+      </div>
+      <div class="proj-impact">실무자는 업무만 입력하고 보고서는 시스템이 만드는 구조로, 업무 자동화와 유지보수 데이터 통계 수집을 함께 이룹니다.</div>
+      <a class="ops-link mono" href="https://neisreport.pythonanywhere.com/" target="_blank" rel="noopener">주간업무보고 샘플 페이지 →</a>
+    </div>
+
+    <div class="proj has-shot reveal">
+      <div class="proj-head">
+        <div class="proj-title"><div class="num mono">03</div><div class="k mono">WORK STATUS BOARD</div><h3>출장 · 휴가 · 외근을 한눈에, 인프라 근무상황판</h3></div>
+        <a class="shot" href="https://neisreport.pythonanywhere.com/infraboard/" target="_blank" rel="noopener" title="샘플 페이지 열기"><img src="img/shot-infraboard.jpg" alt="인프라 근무상황판 첫 화면" loading="lazy"></a>
+      </div>
+      <div class="proj-grid">
+        <div class="proj-col"><div class="h">도입 배경</div><p>출장·휴가·외근을 메신저와 엑셀로 따로 관리하다 보니 팀 전체 현황과 남은 연차를 바로 확인하기 어려웠습니다.</p></div>
+        <div class="proj-col"><div class="h">주요 기능</div><ul><li>달력에서 날짜를 누르거나 끌어서 바로 신청, 여러 날 일정은 한 줄로 표시</li><li>휴가는 PM 승인 후 확정, 연차·공가·대체휴가 잔여 자동 계산</li><li>같은 날 일정 겹침 차단, 내역·휴가 현황 엑셀 내보내기</li></ul></div>
+        <div class="proj-col"><div class="h">적용 현황</div><p>K-에듀파인 물적기반·나이스 인프라 유지관리 프로젝트에 맞춰 개발했고, 인터넷 없이 Python만으로 동작하는 폐쇄망 서버 버전으로 배포합니다.</p></div>
+      </div>
+      <div class="proj-impact">관리자와 신청자 권한을 나눠, 팀원은 신청만 하고 PM은 승인과 현황 파악을 한 화면에서 끝낼 수 있습니다.</div>
+      <a class="ops-link mono" href="https://neisreport.pythonanywhere.com/infraboard/" target="_blank" rel="noopener">근무상황판 샘플 페이지 →</a>
+    </div>
+
     <div class="proj reveal">
-      <div class="num mono">02</div>
+      <div class="num mono">04</div>
       <div class="k mono">AI CODING ASSISTANT</div>
       <h3>코드·쿼리를 검증하는 AI Copilot</h3>
       <div class="proj-grid">
@@ -328,18 +368,7 @@
     </div>
 
     <div class="proj reveal">
-      <div class="num mono">03</div>
-      <div class="k mono">AUTO REPORTING</div>
-      <h3>정기 보고 자동 생성 프로그램</h3>
-      <div class="proj-grid">
-        <div class="proj-col"><div class="h">도입 배경</div><p>주간·월간 보고는 템플릿에 기간별 데이터만 바뀌는 구조라, 자동화 여지가 큽니다.</p></div>
-        <div class="proj-col"><div class="h">주요 기능</div><p>운영 중인 장애이력 유지관리(i-Portal) 데이터와 연동해, 실무자가 입력한 데이터가 보고서에 자동으로 취합됩니다.</p></div>
-        <div class="proj-col"><div class="h">기대 효과</div><p>업무 자동화로 생산성이 오르고, 인프라 유지보수 데이터 통계를 자동으로 수집할 수 있습니다.</p></div>
-      </div>
-    </div>
-
-    <div class="proj reveal">
-      <div class="num mono">04</div>
+      <div class="num mono">05</div>
       <div class="k mono">INFRA AUTOMATION</div>
       <h3>일일점검 · 로그정리 자동화 스크립트</h3>
       <div class="proj-grid">
