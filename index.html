@@ -186,6 +186,32 @@
   .proj a.shot:hover{ transform:translateY(-2px); box-shadow:0 10px 26px rgba(20,40,90,.16); }
   @media (max-width:860px){ .proj-head{ grid-template-columns:1fr; } .proj .shot{ max-width:520px; } }
 
+
+  /* featured project (sLLM) */
+  .card-feature{ border:1.5px solid var(--brand); background:linear-gradient(120deg,#fff 0%,var(--brand-tint) 100%); }
+  .proj-feature{ border:2px solid var(--brand); box-shadow:0 26px 60px rgba(22,86,232,0.16); }
+  .proj-feature .num{ color:#D3E1FD; }
+  .feature-badge{ display:inline-block; font-size:12px; font-weight:700; letter-spacing:0.06em; color:#fff; background:var(--brand); border-radius:999px; padding:5px 12px; margin-bottom:14px; }
+  .feature-lead{ font-size:17px; color:var(--ink-soft); max-width:760px; margin:-6px 0 22px; }
+  .hl-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:22px; }
+  .hl{ background:var(--brand-tint); border-radius:12px; padding:16px 18px; }
+  .hl-k{ font-size:11.5px; font-weight:700; letter-spacing:0.1em; color:var(--brand); margin-bottom:4px; }
+  .hl-v{ font-size:17px; font-weight:800; color:var(--brand-ink); margin-bottom:4px; }
+  .hl-d{ font-size:14px; color:var(--ink-soft); line-height:1.55; }
+  .feature-shot{ margin:0 0 6px; border:1px solid var(--line); border-radius:12px; overflow:hidden; background:#fff; }
+  .feature-shot img{ width:100%; display:block; }
+  .feature-shot figcaption{ font-size:14px; color:var(--ink-soft); padding:10px 16px; border-top:1px solid var(--line); background:#FAFCFF; }
+  @media (max-width:680px){ .hl-row{ grid-template-columns:1fr; } .proj{ padding:26px 20px; } }
+
+
+  /* in-development badge */
+  .has-dev{ position:relative; }
+  .dev-badge{ position:absolute; top:18px; right:20px; z-index:3; font-size:12.5px; font-weight:700; letter-spacing:0.04em;
+    color:#B45309; background:#FEF3C7; border:1px solid #FCD34D; border-radius:999px; padding:4px 12px; }
+  .dev-badge::before{ content:""; display:inline-block; width:7px; height:7px; border-radius:50%; background:#F59E0B; margin-right:7px; vertical-align:1px; }
+  .proj.has-dev .num{ top:56px; }
+  .proj.has-dev .dev-badge{ top:24px; right:28px; }
+
   /* closing */
   .closing{ padding:130px 0 60px 56px; }
   @media (max-width:680px){ .closing{ padding-left:44px; } }
@@ -220,7 +246,7 @@
   <div class="eyebrow mono">ITCEN· AIES LEARNING ORGANIZATION</div>
   <h1>AIES</h1>
   <div class="sub mono">AI Education System</div>
-  <p class="tagline">나이스·K-에듀파인 프로젝트의 ACE들이 모여, AI로 현업의 비효율을 직접 해결하는 학습조직입니다.</p>
+  <p class="tagline">나이스·K-에듀파인 프로젝트의 ACE들이 모여, 폐쇄망 sLLM과 AI로 현업의 비효율을 직접 해결하는 학습조직입니다.</p>
   <div class="speaker">AIES 학습조직장 · 안성환 이사</div>
   <div class="scroll-cue mono">SCROLL ↓</div>
 </section>
@@ -243,13 +269,14 @@
     </div>
 
     <div class="reveal" style="margin-top:8px;">
-      <p class="part-desc" style="margin-bottom:20px;">현재 개발 중인 프로그램은 5가지입니다.</p>
+      <p class="part-desc" style="margin-bottom:20px;">현재 개발·운영 중인 프로그램은 6가지입니다.</p>
       <div class="card-grid">
+        <div class="card card-feature" style="grid-column:1/-1;"><div class="tag mono">FEATURED · 폐쇄망 sLLM</div><h3>sLLM 형상관리 챗봇</h3><p>인터넷 없이 동작하는 로컬 AI가 기관별 SSL 인증서·라이선스 만료일과 장애 이력을 자연어로 답변</p></div>
         <div class="card"><h3>AI 회의록</h3><p>회의 내용을 녹음하면 자동으로 요약·정리</p></div>
         <div class="card"><h3>주간업무보고 자동 생성</h3><p>캘린더에 업무만 입력하면 주간보고서를 취합·생성</p></div>
         <div class="card"><h3>인프라 근무상황판</h3><p>출장·휴가·외근 신청과 PM 승인, 잔여 연차를 한 화면에서 관리</p></div>
-        <div class="card"><h3>AI 장애분석 보고</h3><p>장애 이력을 분석해 보고서 초안 생성</p></div>
-        <div class="card" style="grid-column:1/-1;"><h3>SI 개발 지원 도우미</h3><p>폐쇄망 환경에서 코드·쿼리 검증 지원</p></div>
+        <div class="card"><h3>일일점검 · 로그정리 자동화</h3><p>행안부 지침 점검 스크립트와 임계치 기반 로그 자동 정리</p></div>
+        <div class="card has-dev" style="grid-column:1/-1;"><span class="dev-badge mono">개발 중</span><h3>SI 개발 지원 도우미</h3><p>폐쇄망 환경에서 코드·쿼리 검증 지원</p></div>
       </div>
     </div>
   </div>
@@ -274,7 +301,7 @@
       <div class="org-card"><div class="role mono">개발</div><div class="name">김지환 책임</div><div class="desc">개발자</div></div>
       <div class="org-card"><div class="role mono">개발</div><div class="name">이도현 선임</div><div class="desc">개발자</div></div>
     </div>
-    <p class="org-note reveal">프로그램 개발 기간: 2026년 6월 ~ 8월</p>
+    <p class="org-note reveal">sLLM 형상관리 챗봇: 2025년 구축 후 2026년 고도화 &nbsp;·&nbsp; 업무 자동화 프로그램 개발 기간: 2026년 6월 ~ 8월</p>
   </div>
 </section>
 
@@ -313,11 +340,37 @@
   <div class="wrap" style="padding-left:0;">
     <div class="part-label mono">PART 03</div>
     <h2 class="part-title reveal">AIES 학습조직 개발중인 프로젝트</h2>
-    <p class="part-desc reveal">현재 5가지 프로그램을 실제로 개발하고 있습니다. 아래에서 각 프로젝트를 자세히 살펴볼 수 있습니다.</p>
+    <p class="part-desc reveal">현재 6가지 프로그램을 실제로 개발·운영하고 있습니다. 아래에서 각 프로젝트를 자세히 살펴볼 수 있습니다.</p>
+
+    <div class="proj proj-feature reveal">
+      <div class="num mono">01</div>
+      <div class="feature-badge mono">FEATURED · 2025 구축 → 2026 고도화</div>
+      <div class="k mono">CLOSED-NETWORK sLLM CHATBOT</div>
+      <h3>인터넷 없이 동작하는 AI, sLLM 형상관리 챗봇</h3>
+      <p class="feature-lead">장애이력관리시스템(i-Portal)의 형상 데이터를 로컬 sLLM에 학습시켜, 기관별 SSL 인증서·라이선스 만료일과 장애 이력을 자연어 질의로 즉시 답변합니다.</p>
+
+      <div class="hl-row">
+        <div class="hl"><div class="hl-k mono">OFFLINE</div><div class="hl-v">인터넷 없이 동작</div><div class="hl-d">로컬 GPU 서버에서 sLLM 구동, 교육망(폐쇄망) 그대로 적용</div></div>
+        <div class="hl"><div class="hl-k mono">GROUNDED</div><div class="hl-v">환각 답변 방지</div><div class="hl-d">학습되지 않은 질문엔 "학습되지 않음"으로 응답</div></div>
+        <div class="hl"><div class="hl-k mono">RFP-READY</div><div class="hl-v">제안요청서 대응</div><div class="hl-d">K-에듀파인 RFP(MAR-011) 인증서·라이선스 만료 안내 요구 선제 대응</div></div>
+      </div>
+
+      <figure class="feature-shot">
+        <img src="img/shot-sllm.jpg" alt="sLLM 형상관리 챗봇 질의응답 시연: 제주 SSL 인증서 만료일 질의와 학습 데이터 대조" loading="lazy">
+        <figcaption>"제주의 SSL 인증서 만료일은 언제지?" — 학습 데이터(인증서 운영현황)와 챗봇 답변이 일치</figcaption>
+      </figure>
+
+      <div class="proj-grid">
+        <div class="proj-col"><div class="h">도입 배경</div><p>SSL 인증서 교체 주기가 1년에서 반기로 짧아지면서, 시도교육청별 만료일을 문서·엑셀로 따로 관리해서는 적기 교체가 어려워졌습니다. 미교체 시 브라우저에 신뢰할 수 없는 사이트 경고가 뜹니다.</p></div>
+        <div class="proj-col"><div class="h">동작 구조 (RAG)</div><ul><li>관리자가 PDF·Excel 형상 데이터 업로드</li><li>BGE-M3 임베딩 → FAISS 벡터DB 저장</li><li>질의와 가장 가까운 내용을 찾아 sLLM(Llama3·Qwen3·GPT-OSS)이 답변</li></ul></div>
+        <div class="proj-col"><div class="h">활용 범위</div><ul><li>기관별 SSL 인증서·갱신형 라이선스 만료일 조회</li><li>나이스 장애현황 보고서 본문 검색</li><li>장애 유형 분석 기반 대응방안 추론</li></ul></div>
+      </div>
+      <div class="proj-impact">아이티센 교육사업부만 보유한 i-Portal의 패치·장애 이력을 AI에 학습시켜, 유지관리 품질을 높이고 차기 사업 제안의 차별화 요소로 활용합니다.</div>
+    </div>
 
     <div class="proj has-shot reveal">
       <div class="proj-head">
-        <div class="proj-title"><div class="num mono">01</div><div class="k mono">AI MEETING NOTES</div><h3>AI로 회의 내용을 요약해주는 AI 회의록</h3></div>
+        <div class="proj-title"><div class="num mono">02</div><div class="k mono">AI MEETING NOTES</div><h3>AI로 회의 내용을 요약해주는 AI 회의록</h3></div>
         <div class="shot"><img src="img/shot-meeting.jpg" alt="AI 회의록 실행 화면" loading="lazy"></div>
       </div>
       <div class="proj-grid">
@@ -329,7 +382,7 @@
 
     <div class="proj has-shot reveal">
       <div class="proj-head">
-        <div class="proj-title"><div class="num mono">02</div><div class="k mono">AUTO REPORTING</div><h3>정기 보고 자동 생성 — 나이스 인프라 주간업무보고 시스템</h3></div>
+        <div class="proj-title"><div class="num mono">03</div><div class="k mono">AUTO REPORTING</div><h3>정기 보고 자동 생성 — 나이스 인프라 주간업무보고 시스템</h3></div>
         <a class="shot" href="https://neisreport.pythonanywhere.com/" target="_blank" rel="noopener" title="샘플 페이지 열기"><img src="img/shot-weekly.jpg" alt="주간업무보고 시스템 첫 화면" loading="lazy"></a>
       </div>
       <div class="proj-grid">
@@ -343,7 +396,7 @@
 
     <div class="proj has-shot reveal">
       <div class="proj-head">
-        <div class="proj-title"><div class="num mono">03</div><div class="k mono">WORK STATUS BOARD</div><h3>출장 · 휴가 · 외근을 한눈에, 인프라 근무상황판</h3></div>
+        <div class="proj-title"><div class="num mono">04</div><div class="k mono">WORK STATUS BOARD</div><h3>출장 · 휴가 · 외근을 한눈에, 인프라 근무상황판</h3></div>
         <a class="shot" href="https://neisreport.pythonanywhere.com/infraboard/" target="_blank" rel="noopener" title="샘플 페이지 열기"><img src="img/shot-infraboard.jpg" alt="인프라 근무상황판 첫 화면" loading="lazy"></a>
       </div>
       <div class="proj-grid">
@@ -353,18 +406,6 @@
       </div>
       <div class="proj-impact">관리자와 신청자 권한을 나눠, 팀원은 신청만 하고 PM은 승인과 현황 파악을 한 화면에서 끝낼 수 있습니다.</div>
       <a class="ops-link mono" href="https://neisreport.pythonanywhere.com/infraboard/" target="_blank" rel="noopener">근무상황판 샘플 페이지 →</a>
-    </div>
-
-    <div class="proj reveal">
-      <div class="num mono">04</div>
-      <div class="k mono">AI CODING ASSISTANT</div>
-      <h3>코드·쿼리를 검증하는 AI Copilot</h3>
-      <div class="proj-grid">
-        <div class="proj-col"><div class="h">도입 배경</div><p>시스템 복잡도가 커지고 보안·규제가 강화되면서, 폐쇄망 환경의 개발 난이도가 높아지고 있습니다.</p></div>
-        <div class="proj-col"><div class="h">주요 기능</div><ul><li>문법 오류 검증, 알고리즘·쿼리 튜닝 제안</li><li>프롬프트 질의응답 (GPT OSS 테스트 중)</li></ul></div>
-        <div class="proj-col"><div class="h">기대 효과</div><p>반복 코드 작성 시간이 줄어 개발 속도가 오르고, 주니어 개발자도 시니어급 코딩 컨벤션을 적용할 수 있습니다.</p></div>
-      </div>
-      <div class="proj-impact">폐쇄망 내부에 구축된 AI가 코드와 쿼리를 실시간으로 검증·최적화해, 보안과 생산성을 동시에 높이는 것이 목표입니다.</div>
     </div>
 
     <div class="proj reveal">
@@ -378,6 +419,19 @@
       </div>
       <div class="proj-impact">인프라 운영의 정확성을 확보하고, 고객사의 프로젝트 체감 만족도를 높이는 것이 목표입니다.</div>
     </div>
+    <div class="proj has-dev reveal">
+      <span class="dev-badge mono">개발 중</span>
+      <div class="num mono">06</div>
+      <div class="k mono">AI CODING ASSISTANT</div>
+      <h3>코드·쿼리를 검증하는 AI Copilot</h3>
+      <div class="proj-grid">
+        <div class="proj-col"><div class="h">도입 배경</div><p>시스템 복잡도가 커지고 보안·규제가 강화되면서, 폐쇄망 환경의 개발 난이도가 높아지고 있습니다.</p></div>
+        <div class="proj-col"><div class="h">주요 기능</div><ul><li>문법 오류 검증, 알고리즘·쿼리 튜닝 제안</li><li>프롬프트 질의응답 (GPT OSS 테스트 중)</li></ul></div>
+        <div class="proj-col"><div class="h">기대 효과</div><p>반복 코드 작성 시간이 줄어 개발 속도가 오르고, 주니어 개발자도 시니어급 코딩 컨벤션을 적용할 수 있습니다.</p></div>
+      </div>
+      <div class="proj-impact">폐쇄망 내부에 구축된 AI가 코드와 쿼리를 실시간으로 검증·최적화해, 보안과 생산성을 동시에 높이는 것이 목표입니다.</div>
+    </div>
+
   </div>
 </section>
 
